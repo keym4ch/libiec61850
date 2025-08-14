@@ -10,8 +10,45 @@
 #include <iec61850_client.h>
 #include <iec61850_model.h>
 #include <iec61850_server.h>
-ModelNode* toModelNode(LogicalNode * ln)
+
+FileDirectoryEntry toFileDirectoryEntry(void* data)
 {
+    return (FileDirectoryEntry) data;
+}
+
+FILE* openFile(char* name)
+{
+    return fopen(name,"w+");
+}
+
+int closeFile(FILE* stream)
+{
+        return fclose(stream);
+}
+
+static bool IedConnection_downloadHandler(void* parameter, uint8_t* buffer, uint32_t bytesRead)
+{
+    FILE* fp = (FILE*) parameter;
+    if(fp == NULL){
+       return false;
+    }
+    if (bytesRead > 0) {
+        if (fwrite(buffer, bytesRead, 1, fp) != 1) {
+            printf("Failed to write local file!\n");
+            /*fclose(fp);*/
+            return false;
+        }
+    }
+    /*fclose(fp);*/
+    return true;
+}
+
+IedClientGetFileHandler getIedconnectionDownloadHandler(){
+    return (IedClientGetFileHandler) &IedConnection_downloadHandler;
+}
+
+ModelNode* toModelNode(LogicalNode * ln)
+{    
     return (ModelNode*) ln;
 }
 ModelNode* toModelNode(DataObject * DO)
@@ -53,11 +90,18 @@ DataObject* toDataObject(ModelNode * MN)
 typedef uint64_t msSinceEpoch;
 typedef uint64_t nsSinceEpoch;
 
+FILE* openFile(char*);
+int closeFile(FILE*);
+static bool IedConnection_downloadHandler(void*, uint8_t*, uint32_t);
+IedClientGetFileHandler getIedconnectionDownloadHandler();
+
+
 ModelNode* toModelNode(LogicalNode *);
 ModelNode* toModelNode(DataObject *);
 DataAttribute* toDataAttribute(DataObject *);
 DataAttribute* toDataAttribute(ModelNode *);
 DataObject* toDataObject(ModelNode *);
+FileDirectoryEntry toFileDirectoryEntry(void*);
 char* toCharP(void *);
 
 /* Goose Subscriber section */

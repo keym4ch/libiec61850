@@ -61,7 +61,7 @@
 #define CONFIG_TCP_KEEPALIVE_CNT 2
 
 /* maximum COTP (ISO 8073) TPDU size - valid range is 1024 - 8192 */
-#define CONFIG_COTP_MAX_TPDU_SIZE 8192
+#define CONFIG_COTP_MAX_TPDU_SIZE 1024
 
 /* Ethernet interface ID for GOOSE and SV */
 #define CONFIG_ETHERNET_INTERFACE_ID "eth0"

@@ -528,7 +528,7 @@ CotpConnection_init(CotpConnection* self, Socket socket,
     self->tlsSocket = NULL;
 #endif
     self->remoteRef = -1;
-    self->localRef = 1;
+    self->localRef = 28;
     self->protocolClass = -1;
 	self->options.tpduSize = 0;
 
